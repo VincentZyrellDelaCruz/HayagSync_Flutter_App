@@ -12,18 +12,25 @@ import 'package:hayagsync_app/presentation/incidents/report_incident_page.dart';
 import 'package:hayagsync_app/presentation/posts/post_page.dart';
 import 'package:hayagsync_app/presentation/profile_page.dart';
 import 'package:hayagsync_app/presentation/widget_scaffold.dart';
+import 'package:hayagsync_app/providers/auth_provider.dart';
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'root');
 final _shellNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'shell');
 
-Future<GoRouter> createRouter() async {
-  final token = await TokenStorage.getToken();
-
+GoRouter createRouter(AuthState authState) {
   return GoRouter(
     navigatorKey: _rootNavigatorKey,
-    initialLocation: AppRoute.initialLocation(
-      token: token,
-    ),
+    initialLocation: authState.token != null
+        ? AppRoute.dashboard
+        : AppRoute.login,
+    redirect: (context, state) {
+      final isLoggedIn = authState.token != null;
+      final isLoggingIn = state.matchedLocation == AppRoute.login;
+
+      if (!isLoggedIn && !isLoggingIn) return AppRoute.login;
+      if (isLoggedIn && isLoggingIn) return AppRoute.dashboard;
+      return null;
+    },
     routes: [
       // Auth Routes
       GoRoute(
@@ -63,7 +70,7 @@ Future<GoRouter> createRouter() async {
                 path: AppRoute.inboxDetail,
                 builder: (context, state) {
                   final id = state.pathParameters['id']!;
-                  return InboxDetailPage(id: id,);
+                  return InboxDetailPage(id: id);
                 },
               ),
             ],
@@ -71,14 +78,13 @@ Future<GoRouter> createRouter() async {
           GoRoute(
             path: AppRoute.incidents,
             builder: (context, state) => const IncidentPage(),
-            routes: [
-              GoRoute(
-                path: AppRoute.reportIncident,
-                builder: (context, state) => const ReportIncidentPage(),
-              ),
-            ],
           ),
         ],
+      ),
+
+      GoRoute(
+        path: AppRoute.reportIncident,
+        builder: (context, state) => const ReportIncidentPage(),
       ),
     ],
   );

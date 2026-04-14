@@ -51,7 +51,7 @@ class AuthService {
 
   static Future<void> logout(String token) async {
     try {
-      final Response<dynamic> response = await _dio.get(
+      final Response<dynamic> response = await _dio.post(
         '/logout',
         options: Options(headers: {'Authorization': 'Bearer $token'}),
       );

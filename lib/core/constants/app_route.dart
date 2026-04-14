@@ -4,13 +4,13 @@ class AppRoute {
   static const String register = '/register';
 
   // Navigation Bar Routes
-  static const String dashboard = '/dashboard'; // Initial location if logged in
+  static const String dashboard = '/'; // Initial location if logged in
   static const String disciplinaryPosts = '/disciplinary_posts';
   static const String inbox = '/inbox';
   static const String incidents = '/incidents';
 
   // Subpaths
-  static const String reportIncident = 'report';
+  static const String reportIncident = '/incidents/report';
   static const String incidentDetail = ':id';
   static const String inboxDetail = ':id';
   static const String profile = 'profile';

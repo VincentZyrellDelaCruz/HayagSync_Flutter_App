@@ -8,22 +8,26 @@ final incidentProvider = NotifierProvider<IncidentNotifier, IncidentState>(
 
 class IncidentState {
   final bool isLoading;
+  final bool hasLoaded;
   final List<Incident> incidents;
   final String? error;
 
   const IncidentState({
     this.isLoading = false,
+    this.hasLoaded = false,
     this.incidents = const [],
     this.error,
   });
 
   IncidentState copyWith({
     bool? isLoading,
+    bool? hasLoaded,
     List<Incident>? incidents,
     String? error,
   }) {
     return IncidentState(
       isLoading: isLoading ?? this.isLoading,
+      hasLoaded: hasLoaded ?? this.hasLoaded,
       incidents: incidents ?? this.incidents,
       error: error ?? this.error,
     );
@@ -33,17 +37,22 @@ class IncidentState {
 class IncidentNotifier extends Notifier<IncidentState> {
   @override
   IncidentState build() {
-    getIncidents();
-    return IncidentState();
+    return const IncidentState();
   }
 
-  Future<void> getIncidents() async {
+  Future<void> getIncidents({bool forceRefresh = false}) async {
+    if (state.hasLoaded && !forceRefresh) return;
+
     state = state.copyWith(isLoading: true, error: null);
 
     try {
       final data = await IncidentService.getIncidents();
 
-      state = state.copyWith(isLoading: false, incidents: data);
+      state = state.copyWith(
+        isLoading: false,
+        incidents: data,
+        hasLoaded: true,
+      );
     } catch (e) {
       state = state.copyWith(isLoading: false, error: e.toString());
       rethrow;
@@ -51,6 +60,6 @@ class IncidentNotifier extends Notifier<IncidentState> {
   }
 
   Future<void> refresh() async {
-    await getIncidents();
+    await getIncidents(forceRefresh: true);
   }
 }

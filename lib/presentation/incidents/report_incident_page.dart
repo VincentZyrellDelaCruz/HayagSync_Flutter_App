@@ -1,11 +1,15 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:hayagsync_app/models/incident/local_evidence.dart';
 import 'package:hayagsync_app/models/selected_student.dart';
 import 'package:hayagsync_app/models/student.dart';
 import 'package:hayagsync_app/providers/category_provider.dart';
 import 'package:hayagsync_app/providers/student_provider.dart';
 import 'package:hayagsync_app/services/incident_service.dart';
+import 'package:image_picker/image_picker.dart';
 
 class ReportIncidentPage extends ConsumerStatefulWidget {
   const ReportIncidentPage({super.key});
@@ -19,9 +23,14 @@ class _ReportIncidentPageState extends ConsumerState<ReportIncidentPage> {
   final _descController = TextEditingController();
   final _searchController = TextEditingController();
 
+  final ImagePicker _picker = ImagePicker();
+
   int? selectedCategoryId;
+
   List<SelectedStudent> selectedStudents = [];
   List<Student> filteredStudents = [];
+
+  List<LocalEvidence> evidences = [];
 
   bool isSelected(String studentId) {
     return selectedStudents.any((e) => e.student.id == studentId);
@@ -45,6 +54,32 @@ class _ReportIncidentPageState extends ConsumerState<ReportIncidentPage> {
 
   bool isMyStudent(String studentId, List<Student> myStudents) {
     return myStudents.any((s) => s.id == studentId);
+  }
+
+  Future<void> pickImage() async {
+    final XFile? file = await _picker.pickImage(source: ImageSource.gallery);
+
+    if (file != null) {
+      setState(() {
+        evidences = [...evidences, LocalEvidence(file: File(file.path))];
+      });
+    }
+  }
+
+  Future<void> pickVideo() async {
+    final XFile? file = await _picker.pickVideo(source: ImageSource.gallery);
+
+    if (file != null) {
+      setState(() {
+        evidences.add(LocalEvidence(file: File(file.path)));
+      });
+    }
+  }
+
+  void removeEvidence(int index) {
+    setState(() {
+      evidences.removeAt(index);
+    });
   }
 
   @override
@@ -237,6 +272,103 @@ class _ReportIncidentPageState extends ConsumerState<ReportIncidentPage> {
 
             const SizedBox(height: 20),
 
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Evidences',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+
+                const SizedBox(height: 10),
+
+                Row(
+                  children: [
+                    IconButton(
+                      onPressed: pickImage,
+                      icon: const Icon(Icons.image_rounded),
+                    ),
+                    IconButton(
+                      onPressed: pickVideo,
+                      icon: const Icon(Icons.videocam_rounded),
+                    ),
+                  ],
+                ),
+
+                const SizedBox(height: 10),
+
+                if (evidences.isNotEmpty)
+                  SizedBox(
+                    height: 220,
+                    child: PageView.builder(
+                      itemCount: evidences.length,
+                      itemBuilder: (context, index) {
+                        final evidence = evidences[index];
+
+                        return Stack(
+                          children: [
+                            Positioned.fill(
+                              child: GestureDetector(
+                                onTap: () {
+                                  showDialog(
+                                    context: context,
+                                    builder: (_) => Dialog(
+                                      child: evidence.isVideo
+                                          ? const Center(
+                                              child: Text('Video Preview'),
+                                            )
+                                          : Image.file(evidence.file),
+                                    ),
+                                  );
+                                },
+                                child: evidence.isVideo
+                                    ? const Center(
+                                        child: Icon(
+                                          Icons.play_circle_outline_rounded,
+                                          size: 60,
+                                        ),
+                                      )
+                                    : Image.file(
+                                        evidence.file,
+                                        fit: BoxFit.cover,
+                                      ),
+                              ),
+                            ),
+
+                            Positioned(
+                              bottom: 0,
+                              left: 0,
+                              right: 0,
+                              child: TextField(
+                                decoration: const InputDecoration(
+                                  hintText: 'Caption',
+                                  filled: true,
+                                ),
+                                onChanged: (value) => evidence.caption = value,
+                              ),
+                            ),
+
+                            Positioned(
+                              top: 0,
+                              right: 0,
+                              child: IconButton(
+                                onPressed: () => removeEvidence(index),
+                                icon: const Icon(
+                                  Icons.close_rounded,
+                                  color: Colors.red,
+                                ),
+                              ),
+                            ),
+                          ],
+                        );
+                      },
+                    ),
+                  ),
+              ],
+            ),
+
+            const SizedBox(height: 20),
+
             ElevatedButton(
               onPressed: () async {
                 try {
@@ -249,6 +381,7 @@ class _ReportIncidentPageState extends ConsumerState<ReportIncidentPage> {
                     description: _descController.text,
                     categoryId: selectedCategoryId!,
                     students: payloadStudents,
+                    evidences: evidences,
                   );
 
                   if (!mounted) return;

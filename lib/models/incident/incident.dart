@@ -1,4 +1,5 @@
 import 'package:hayagsync_app/models/incident/incident_category.dart';
+import 'package:hayagsync_app/models/incident/incident_evidence.dart';
 import 'package:hayagsync_app/models/incident/latest_update.dart';
 import 'package:hayagsync_app/models/student.dart';
 import 'package:hayagsync_app/models/user.dart';
@@ -28,6 +29,8 @@ class Incident {
   final List<Student> students;
   final LatestUpdate? latestUpdate;
 
+  final List<IncidentEvidence> evidences;
+
   Incident({
     required this.id,
     required this.schoolId,
@@ -47,6 +50,7 @@ class Incident {
     this.user,
     this.students = const [],
     this.latestUpdate,
+    this.evidences = const [],
   });
 
   factory Incident.fromJson(Map<String, dynamic> json) {
@@ -92,6 +96,10 @@ class Incident {
       latestUpdate: json['latest_update'] != null
           ? LatestUpdate.fromJson(json['latest_update'])
           : null,
+
+      evidences: (json['incident_evidences'] as List? ?? [])
+        .map((e) => IncidentEvidence.fromJson(e))
+        .toList(),
     );
   }
 }

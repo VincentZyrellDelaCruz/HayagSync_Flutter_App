@@ -82,7 +82,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                   controller: _passwordController,
                   obscureText: true,
                   decoration: const InputDecoration(
-                    labelText: 'Email',
+                    labelText: 'Password',
                     border: OutlineInputBorder(),
                   ),
                   validator: (value) {

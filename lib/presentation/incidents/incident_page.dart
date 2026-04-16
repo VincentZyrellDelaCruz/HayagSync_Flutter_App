@@ -24,7 +24,7 @@ class _IncidentPageState extends ConsumerState<IncidentPage> {
     final state = ref.watch(incidentProvider);
 
     if (state.isLoading) {
-      return const Center(child: CircularProgressIndicator());
+      return const Center(child: CircularProgressIndicator.adaptive());
     }
 
     if (state.error != null) {

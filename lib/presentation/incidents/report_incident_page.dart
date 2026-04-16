@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:hayagsync_app/models/incident/local_evidence.dart';
 import 'package:hayagsync_app/models/selected_student.dart';
 import 'package:hayagsync_app/models/student.dart';
+import 'package:hayagsync_app/presentation/widgets/video_preview_dialog.dart';
 import 'package:hayagsync_app/providers/category_provider.dart';
 import 'package:hayagsync_app/providers/student_provider.dart';
 import 'package:hayagsync_app/services/incident_service.dart';
@@ -307,26 +308,34 @@ class _ReportIncidentPageState extends ConsumerState<ReportIncidentPage> {
 
                         return Stack(
                           children: [
-                            Positioned.fill(
-                              child: GestureDetector(
-                                onTap: () {
-                                  showDialog(
-                                    context: context,
-                                    builder: (_) => Dialog(
-                                      child: evidence.isVideo
-                                          ? const Center(
-                                              child: Text('Video Preview'),
-                                            )
-                                          : Image.file(evidence.file),
-                                    ),
-                                  );
-                                },
+                            GestureDetector(
+                              onTap: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (_) {
+                                    if (evidence.isVideo) {
+                                      return VideoPreviewDialog(
+                                        file: evidence.file,
+                                      );
+                                    }
+
+                                    return Dialog(
+                                      child: Image.file(evidence.file),
+                                    );
+                                  },
+                                );
+                              },
+                              child: Positioned.fill(
                                 child: evidence.isVideo
-                                    ? const Center(
-                                        child: Icon(
-                                          Icons.play_circle_outline_rounded,
-                                          size: 60,
-                                        ),
+                                    ? Stack(
+                                        alignment: Alignment.center,
+                                        children: [
+                                          Container(color: Colors.black12),
+                                          const Icon(
+                                            Icons.play_circle_outline_rounded,
+                                            size: 60,
+                                          ),
+                                        ],
                                       )
                                     : Image.file(
                                         evidence.file,

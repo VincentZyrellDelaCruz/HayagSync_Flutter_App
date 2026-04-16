@@ -101,7 +101,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                   child: ElevatedButton(
                     onPressed: state.isLoading ? null : _login,
                     child: state.isLoading
-                        ? const CircularProgressIndicator()
+                        ? const CircularProgressIndicator.adaptive()
                         : const Text('Login'),
                   ),
                 ),

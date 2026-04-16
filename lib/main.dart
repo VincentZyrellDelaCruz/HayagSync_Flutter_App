@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 import 'package:hayagsync_app/core/router/app_router.dart';
 import 'package:hayagsync_app/providers/auth_provider.dart';
 

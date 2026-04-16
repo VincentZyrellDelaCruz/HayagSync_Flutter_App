@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hayagsync_app/core/constants/app_route.dart';
-import 'package:hayagsync_app/core/storage/token_storage.dart';
 import 'package:hayagsync_app/presentation/auth/login_page.dart';
 import 'package:hayagsync_app/presentation/auth/register_page.dart';
 import 'package:hayagsync_app/presentation/dashboard_page.dart';

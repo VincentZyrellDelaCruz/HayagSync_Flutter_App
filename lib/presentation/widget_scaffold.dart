@@ -4,7 +4,6 @@ import 'package:go_router/go_router.dart';
 import 'package:hayagsync_app/core/constants/app_route.dart';
 import 'package:hayagsync_app/presentation/widgets/app_drawer.dart';
 import 'package:hayagsync_app/presentation/widgets/navbar.dart';
-import 'package:hayagsync_app/providers/auth_provider.dart';
 
 class WidgetScaffold extends ConsumerWidget {
   const WidgetScaffold({super.key, required this.child});

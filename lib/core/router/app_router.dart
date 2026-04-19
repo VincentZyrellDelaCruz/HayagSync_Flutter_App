@@ -6,6 +6,7 @@ import 'package:hayagsync_app/presentation/auth/register_page.dart';
 import 'package:hayagsync_app/presentation/dashboard_page.dart';
 import 'package:hayagsync_app/presentation/inbox/inbox_detail_page.dart';
 import 'package:hayagsync_app/presentation/inbox/inbox_page.dart';
+import 'package:hayagsync_app/presentation/incidents/incident_detail_page.dart';
 import 'package:hayagsync_app/presentation/incidents/incident_page.dart';
 import 'package:hayagsync_app/presentation/incidents/report_incident_page.dart';
 import 'package:hayagsync_app/presentation/posts/post_page.dart';
@@ -84,6 +85,14 @@ GoRouter createRouter(AuthState authState) {
       GoRoute(
         path: AppRoute.reportIncident,
         builder: (context, state) => const ReportIncidentPage(),
+      ),
+
+      GoRoute(
+        path: '${AppRoute.incidents}/:id',
+        builder: (context, state) {
+          final id = state.pathParameters['id']!;
+          return IncidentDetailPage(incidentId: id);
+        },
       ),
     ],
   );

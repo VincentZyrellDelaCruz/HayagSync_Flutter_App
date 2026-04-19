@@ -22,6 +22,24 @@ class IncidentService {
     }
   }
 
+  static Future<Incident> getIncidentById(String id) async {
+    try {
+      await setAuthHeader();
+
+      final response = await _dio.get('${AppRoute.incidents}/$id');
+
+      if (response.statusCode == 200) {
+        return Incident.fromJson(response.data);
+      }
+
+      throw Exception('Failed to load incident detail.');
+    } on DioException catch (e) {
+      throw Exception(
+        e.response?.data['message'] ?? 'Failed to load incident detail.',
+      );
+    }
+  }
+
   static Future<List<Incident>> getIncidents() async {
     try {
       await setAuthHeader();

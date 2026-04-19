@@ -1,3 +1,5 @@
+import 'package:hayagsync_app/core/constants/api_constants.dart';
+
 class IncidentEvidence {
   final String id;
   final String incidentId;
@@ -39,5 +41,15 @@ class IncidentEvidence {
       caption: json['caption'],
       createdAt: DateTime.parse(json['created_at']),
     );
+  }
+
+  bool get isVideo => mimeType.contains('video');
+
+  String get fullUrl {
+    if (isVideo) {
+      return '${ApiConstants.baseUrl}/media/$filePath';
+    }
+
+    return '${ApiConstants.storageUrl}/$filePath';
   }
 }

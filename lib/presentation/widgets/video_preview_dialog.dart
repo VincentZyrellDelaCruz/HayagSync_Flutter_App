@@ -3,9 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 
 class VideoPreviewDialog extends StatefulWidget {
-  const VideoPreviewDialog({super.key, required this.file});
+  const VideoPreviewDialog({super.key, this.file, this.url});
 
-  final File file;
+  final File? file;
+  final String? url;
 
   @override
   State<VideoPreviewDialog> createState() => _VideoPreviewDialogState();
@@ -19,13 +20,20 @@ class _VideoPreviewDialogState extends State<VideoPreviewDialog> {
   void initState() {
     super.initState();
 
-    _controller = VideoPlayerController.file(widget.file)
-      ..initialize().then((_) {
-        setState(() {
-          isInitialized = true;
-        });
-        _controller.play();
+    if (widget.file != null) {
+      _controller = VideoPlayerController.file(widget.file!);
+    } else if (widget.url != null) {
+      _controller = VideoPlayerController.networkUrl(Uri.parse(widget.url!));
+    } else {
+      throw Exception('No file or url provided');
+    }
+
+    _controller.initialize().then((_) {
+      setState(() {
+        isInitialized = true;
       });
+      _controller.play();
+    });
   }
 
   @override

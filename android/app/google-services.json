@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "956242711124",
+    "project_id": "hayagsync",
+    "storage_bucket": "hayagsync.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:956242711124:android:98760e43704c8ce13953c1",
+        "android_client_info": {
+          "package_name": "com.example.hayagsync_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD-C4myxERTUM2SRYqLGtn9GMd08KWSEYg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

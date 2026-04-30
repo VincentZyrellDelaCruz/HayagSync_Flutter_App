@@ -15,11 +15,16 @@ class AuthService {
   static Future<Map<String, dynamic>> login({
     required String email,
     required String password,
+    String? deviceToken,
   }) async {
     try {
       final Response<dynamic> response = await _dio.post(
         '/login',
-        data: {'email': email, 'password': password},
+        data: {
+          'email': email,
+          'password': password,
+          'device_token': deviceToken,
+        },
       );
 
       if (response.statusCode == 200) {

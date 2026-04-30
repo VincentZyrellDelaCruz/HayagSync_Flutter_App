@@ -1,3 +1,5 @@
+import 'package:hayagsync_app/models/incident/incident_status.dart';
+
 class LatestUpdate {
   final String id;
   final String incidentId;
@@ -6,6 +8,8 @@ class LatestUpdate {
   final String note;
   final DateTime createdAt;
 
+  final IncidentStatus? incidentStatus;
+
   LatestUpdate({
     required this.id,
     required this.incidentId,
@@ -13,6 +17,7 @@ class LatestUpdate {
     required this.statusId,
     required this.note,
     required this.createdAt,
+    this.incidentStatus,
   });
 
   factory LatestUpdate.fromJson(Map<String, dynamic> json) {
@@ -23,6 +28,10 @@ class LatestUpdate {
       statusId: json['status_id'],
       note: json['note'] ?? '',
       createdAt: DateTime.parse(json['created_at']),
+
+      incidentStatus: json['incident_status'] != null
+          ? IncidentStatus.fromJson(json['incident_status'])
+          : null,
     );
   }
 }

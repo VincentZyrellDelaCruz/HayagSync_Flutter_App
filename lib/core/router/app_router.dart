@@ -10,6 +10,7 @@ import 'package:hayagsync_app/presentation/incidents/incident_detail_page.dart';
 import 'package:hayagsync_app/presentation/incidents/incident_page.dart';
 import 'package:hayagsync_app/presentation/incidents/report_incident_page.dart';
 import 'package:hayagsync_app/presentation/posts/post_page.dart';
+import 'package:hayagsync_app/presentation/profile/my_children_page.dart';
 import 'package:hayagsync_app/presentation/profile_page.dart';
 import 'package:hayagsync_app/presentation/widget_scaffold.dart';
 import 'package:hayagsync_app/providers/auth_provider.dart';
@@ -80,6 +81,11 @@ GoRouter createRouter(AuthState authState) {
             builder: (context, state) => const IncidentPage(),
           ),
         ],
+      ),
+
+      GoRoute(
+        path: AppRoute.myChildren,
+        builder: (context, state) => const MyChildrenPage(),
       ),
 
       GoRoute(

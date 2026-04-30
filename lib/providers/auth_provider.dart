@@ -1,3 +1,4 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hayagsync_app/core/storage/token_storage.dart';
 import 'package:hayagsync_app/models/user.dart';
@@ -59,7 +60,13 @@ class AuthNotifier extends Notifier<AuthState> {
     state = state.copyWith(isLoading: true, error: null);
 
     try {
-      final data = await AuthService.login(email: email, password: password);
+      final fcmToken = await FirebaseMessaging.instance.getToken();
+
+      final data = await AuthService.login(
+        email: email,
+        password: password,
+        deviceToken: fcmToken,
+      );
 
       final token = data['token'];
       final user = User.fromJson(data['user']);

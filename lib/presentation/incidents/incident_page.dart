@@ -45,10 +45,23 @@ class _IncidentPageState extends ConsumerState<IncidentPage> {
         itemBuilder: (context, index) {
           final incident = state.incidents[index];
 
-          return ListTile(
-            title: Text(incident.title),
-            subtitle: Text(incident.description),
-            onTap: () => context.push('${AppRoute.incidents}/${incident.id}'),
+          return Padding(
+            padding: const EdgeInsets.symmetric(
+              vertical: 8.0,
+              horizontal: 12.0,
+            ),
+            child: Card(
+              elevation: 2,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadiusGeometry.circular(12),
+              ),
+              child: ListTile(
+                title: Text(incident.title),
+                subtitle: Text(incident.description),
+                onTap: () =>
+                    context.push('${AppRoute.incidents}/${incident.id}'),
+              ),
+            ),
           );
         },
       ),

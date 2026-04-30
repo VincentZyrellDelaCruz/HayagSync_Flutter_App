@@ -16,6 +16,8 @@ class AppRoute {
   static const String profile = 'profile';
   static const String notification = 'notification';
 
+  static const String myChildren = '/myChildren';
+
   static String initialLocation({String? token}) {
     return token == null ? login : dashboard;
   }

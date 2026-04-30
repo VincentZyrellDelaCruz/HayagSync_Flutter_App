@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:hayagsync_app/core/constants/app_route.dart';
 import 'package:hayagsync_app/models/user.dart';
 import 'package:hayagsync_app/providers/auth_provider.dart';
 
@@ -45,6 +47,12 @@ class AppDrawer extends ConsumerWidget {
             leading: const Icon(Icons.settings),
             title: const Text('Settings'),
             onTap: () {},
+          ),
+
+          ListTile(
+            leading: const Icon(Icons.child_care_rounded),
+            title: const Text('Related Students List'),
+            onTap: () => context.push(AppRoute.myChildren),
           ),
 
           ListTile(

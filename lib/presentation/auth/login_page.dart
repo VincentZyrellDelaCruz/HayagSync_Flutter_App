@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:hayagsync_app/core/constants/app_route.dart';
 import 'package:hayagsync_app/providers/auth_provider.dart';
 
 class LoginPage extends ConsumerStatefulWidget {
@@ -45,65 +47,107 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     final state = ref.watch(authProvider);
 
     return Scaffold(
-      body: Center(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(24),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              children: [
-                const Text(
-                  'Login',
-                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                ),
+      body: SafeArea(
+        child: Center(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(24),
 
-                const SizedBox(height: 32),
+            child: Form(
+              key: _formKey,
 
-                TextFormField(
-                  controller: _emailController,
-                  decoration: const InputDecoration(
-                    labelText: 'Email',
-                    border: OutlineInputBorder(),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+
+                children: [
+                  const FlutterLogo(size: 90),
+
+                  const SizedBox(height: 24),
+
+                  const Text(
+                    'HAYAGSYNC',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
                   ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Email is required!';
-                    }
 
-                    return null;
-                  },
-                ),
+                  const SizedBox(height: 8),
 
-                SizedBox(height: 16),
-
-                TextFormField(
-                  controller: _passwordController,
-                  obscureText: true,
-                  decoration: const InputDecoration(
-                    labelText: 'Password',
-                    border: OutlineInputBorder(),
+                  const Text(
+                    'Securely Documented. Swiftly Resolved',
+                    textAlign: TextAlign.center,
                   ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Password is required!';
-                    }
 
-                    return null;
-                  },
-                ),
+                  const SizedBox(height: 40),
 
-                const SizedBox(height: 24),
+                  TextFormField(
+                    controller: _emailController,
 
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: state.isLoading ? null : _login,
-                    child: state.isLoading
-                        ? const CircularProgressIndicator.adaptive()
-                        : const Text('Login'),
+                    decoration: const InputDecoration(
+                      labelText: 'Email',
+                      border: OutlineInputBorder(),
+                    ),
+
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Email is required.';
+                      }
+
+                      return null;
+                    },
                   ),
-                ),
-              ],
+
+                  const SizedBox(height: 16),
+
+                  TextFormField(
+                    controller: _passwordController,
+                    obscureText: true,
+
+                    decoration: const InputDecoration(
+                      labelText: 'Password',
+                      border: OutlineInputBorder(),
+                    ),
+
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Password is required.';
+                      }
+
+                      return null;
+                    },
+                  ),
+
+                  const SizedBox(height: 24),
+
+                  SizedBox(
+                    height: 52,
+
+                    child: ElevatedButton(
+                      onPressed: state.isLoading ? null : _login,
+
+                      child: state.isLoading
+                          ? const CircularProgressIndicator.adaptive()
+                          : const Text('Login'),
+                    ),
+                  ),
+
+                  const SizedBox(height: 16),
+
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+
+                    children: [
+                      const Text('No account yet?'),
+
+                      TextButton(
+                        onPressed: () {
+                          context.push(AppRoute.registerEmail);
+                        },
+
+                        child: const Text('Register'),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         ),

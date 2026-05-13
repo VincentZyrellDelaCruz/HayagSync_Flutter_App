@@ -1,13 +1,21 @@
 class AppRoute {
   // Auth
   static const String login = '/login'; // Initial location if not logged in
-  static const String register = '/register';
+  
+  static const registerEmail = '/register/email';
+  static const registerOtp = '/register/otp';
+  static const registerInfo = '/register/info';
+  static const registerRelation = '/register/relation';
+  static const registerProofs = '/register/proofs';
+  static const registerSuccess = '/register/success';
 
   // Navigation Bar Routes
   static const String dashboard = '/'; // Initial location if logged in
-  static const String disciplinaryPosts = '/disciplinary_posts';
+  static const String bulletin = '/bulletin';
   static const String inbox = '/inbox';
   static const String incidents = '/incidents';
+
+  static const String userHub = '/user';
 
   // Subpaths
   static const String reportIncident = '/incidents/report';
@@ -24,7 +32,7 @@ class AppRoute {
 
   static const List<String> navbarRoutes = [
     dashboard,
-    disciplinaryPosts,
+    bulletin,
     inbox,
     incidents,
   ];

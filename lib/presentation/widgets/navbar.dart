@@ -24,7 +24,7 @@ class Navbar extends StatelessWidget {
   int _calculateSelectedIndex(BuildContext context) {
     final location = GoRouterState.of(context).matchedLocation;
     if (location.startsWith(AppRoute.dashboard)) return 0;
-    if (location.startsWith(AppRoute.disciplinaryPosts)) return 1;
+    if (location.startsWith(AppRoute.bulletin)) return 1;
     if (location.startsWith(AppRoute.inbox)) return 2;
     if (location.startsWith(AppRoute.incidents)) return 3;
     return 0;
@@ -36,7 +36,7 @@ class Navbar extends StatelessWidget {
         context.go(AppRoute.dashboard);
         break;
       case 1:
-        context.go(AppRoute.disciplinaryPosts);
+        context.go(AppRoute.bulletin);
         break;
       case 2:
         context.go(AppRoute.inbox);

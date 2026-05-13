@@ -4,6 +4,8 @@ import 'package:go_router/go_router.dart';
 import 'package:hayagsync_app/core/constants/app_route.dart';
 import 'package:hayagsync_app/models/pending_registration.dart';
 import 'package:hayagsync_app/providers/register_provider.dart';
+import 'package:hayagsync_app/models/student.dart';
+import 'package:hayagsync_app/providers/student_provider.dart';
 
 class RegisterRelationPage extends ConsumerStatefulWidget {
   const RegisterRelationPage({super.key});
@@ -13,14 +15,22 @@ class RegisterRelationPage extends ConsumerStatefulWidget {
       _RegisterRelationPageState();
 }
 
-class _RegisterRelationPageState
-    extends ConsumerState<RegisterRelationPage> {
-  final studentController = TextEditingController();
+class _RegisterRelationPageState extends ConsumerState<RegisterRelationPage> {
+  Student? selectedStudent;
 
   String relationship = 'Father';
 
   Future<void> proceed() async {
+    if (selectedStudent == null) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Please select a student')));
+
+      return;
+    }
+
     final notifier = ref.read(registerProvider.notifier);
+
     final temp = ref.read(registerProvider).tempInfo;
 
     final registration = PendingRegistration(
@@ -33,7 +43,10 @@ class _RegisterRelationPageState
       birthdate: temp['birthdate'],
       occupation: temp['occupation'],
       phoneNumber: temp['phone_number'],
-      studentId: studentController.text.trim(),
+
+      // STORE STUDENT ID
+      studentId: selectedStudent!.id,
+
       relationship: relationship,
     );
 
@@ -50,29 +63,43 @@ class _RegisterRelationPageState
         padding: const EdgeInsets.all(24),
         child: Column(
           children: [
-            TextField(
-              controller: studentController,
-              decoration: const InputDecoration(
-                labelText: 'Student Number / ID',
-                border: OutlineInputBorder(),
-              ),
-            ),
+            ref
+                .watch(allStudentsProvider)
+                .when(
+                  data: (students) {
+                    return DropdownButtonFormField<Student>(
+                      initialValue: selectedStudent,
+                      decoration: const InputDecoration(
+                        labelText: 'Select Student',
+                        border: OutlineInputBorder(),
+                      ),
+                      items: students.map((student) {
+                        return DropdownMenuItem<Student>(
+                          value: student,
+                          child: Text(
+                            '${student.firstName} ${student.lastName} '
+                            '(${student.studentNumber})',
+                          ),
+                        );
+                      }).toList(),
+                      onChanged: (value) {
+                        setState(() {
+                          selectedStudent = value;
+                        });
+                      },
+                    );
+                  },
+                  loading: () =>
+                      const Center(child: CircularProgressIndicator.adaptive()),
+                  error: (_, __) => const Text('Unable to load students'),
+                ),
             const SizedBox(height: 16),
             DropdownButtonFormField<String>(
               value: relationship,
               items: const [
-                DropdownMenuItem(
-                  value: 'Father',
-                  child: Text('Father'),
-                ),
-                DropdownMenuItem(
-                  value: 'Mother',
-                  child: Text('Mother'),
-                ),
-                DropdownMenuItem(
-                  value: 'Guardian',
-                  child: Text('Guardian'),
-                ),
+                DropdownMenuItem(value: 'Father', child: Text('Father')),
+                DropdownMenuItem(value: 'Mother', child: Text('Mother')),
+                DropdownMenuItem(value: 'Guardian', child: Text('Guardian')),
               ],
               onChanged: (value) {
                 relationship = value!;

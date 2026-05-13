@@ -3,6 +3,8 @@ import 'package:hayagsync_app/models/incident/incident_evidence.dart';
 import 'package:hayagsync_app/models/incident/latest_update.dart';
 import 'package:hayagsync_app/models/student.dart';
 import 'package:hayagsync_app/models/user.dart';
+import 'package:hayagsync_app/models/ai_parenting_support.dart';
+import 'package:hayagsync_app/models/incident/incident_update.dart';
 
 class Incident {
   final String id;
@@ -26,10 +28,16 @@ class Incident {
 
   final IncidentCategory? category;
   final User? user;
+
   final List<Student> students;
+
   final LatestUpdate? latestUpdate;
 
+  final List<IncidentUpdate> updates;
+
   final List<IncidentEvidence> evidences;
+
+  final AiParentingSupport? aiParentingSupport;
 
   Incident({
     required this.id,
@@ -50,7 +58,9 @@ class Incident {
     this.user,
     this.students = const [],
     this.latestUpdate,
+    this.updates = const [],
     this.evidences = const [],
+    this.aiParentingSupport,
   });
 
   factory Incident.fromJson(Map<String, dynamic> json) {
@@ -63,11 +73,13 @@ class Incident {
 
       title: json['incident_title'] ?? '',
       description: json['description'] ?? '',
-      incidentDatetime: DateTime.parse(json['incident_datetime']),
+
+      incidentDatetime: DateTime.parse(
+        json['incident_datetime'],
+      ),
 
       location: json['location'],
 
-      // STRING → double
       latitude: json['latitude'] != null
           ? double.tryParse(json['latitude'].toString())
           : null,
@@ -97,9 +109,17 @@ class Incident {
           ? LatestUpdate.fromJson(json['latest_update'])
           : null,
 
+      updates: (json['updates'] as List? ?? [])
+          .map((e) => IncidentUpdate.fromJson(e))
+          .toList(),
+
       evidences: (json['incident_evidences'] as List? ?? [])
-        .map((e) => IncidentEvidence.fromJson(e))
-        .toList(),
+          .map((e) => IncidentEvidence.fromJson(e))
+          .toList(),
+
+      aiParentingSupport: json['ai_guidance'] != null
+          ? AiParentingSupport.fromJson(json['ai_guidance'])
+          : null,
     );
   }
 }

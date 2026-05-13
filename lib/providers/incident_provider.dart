@@ -35,9 +35,14 @@ class IncidentState {
 }
 
 class IncidentNotifier extends Notifier<IncidentState> {
+
   @override
   IncidentState build() {
     return const IncidentState();
+  }
+
+  void clear() {
+    state = const IncidentState();
   }
 
   Future<void> getIncidents({bool forceRefresh = false}) async {
@@ -54,7 +59,11 @@ class IncidentNotifier extends Notifier<IncidentState> {
         hasLoaded: true,
       );
     } catch (e) {
-      state = state.copyWith(isLoading: false, error: e.toString());
+      state = state.copyWith(
+        isLoading: false,
+        error: e.toString(),
+      );
+
       rethrow;
     }
   }

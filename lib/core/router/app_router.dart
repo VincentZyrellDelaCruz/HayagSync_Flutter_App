@@ -143,17 +143,15 @@ GoRouter createRouter(AuthState authState) {
 
           GoRoute(
             path: AppRoute.inbox,
-            builder: (context, state) =>
-                const InboxPage(),
+            builder: (context, state) => const InboxListPage(),
 
             routes: [
               GoRoute(
                 path: AppRoute.inboxDetail,
                 builder: (context, state) {
-                  final id =
-                      state.pathParameters['id']!;
-
-                  return InboxDetailPage(id: id);
+                  return InboxDetailPage(
+                    inboxId: int.parse(state.pathParameters['id']!),
+                  );
                 },
               ),
             ],

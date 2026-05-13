@@ -57,7 +57,7 @@ class _IncidentPageState extends ConsumerState<IncidentPage> {
               ),
               child: ListTile(
                 title: Text(incident.title),
-                subtitle: Text(incident.description),
+                subtitle: Text(incident.createdAt.toString()),
                 onTap: () =>
                     context.push('${AppRoute.incidents}/${incident.id}'),
               ),

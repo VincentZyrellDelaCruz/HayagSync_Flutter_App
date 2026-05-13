@@ -2,6 +2,8 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hayagsync_app/core/storage/token_storage.dart';
 import 'package:hayagsync_app/models/user.dart';
+import 'package:hayagsync_app/providers/incident_provider.dart';
+import 'package:hayagsync_app/providers/student_provider.dart';
 import 'package:hayagsync_app/services/auth_service.dart';
 
 final authProvider = NotifierProvider<AuthNotifier, AuthState>(
@@ -73,9 +75,22 @@ class AuthNotifier extends Notifier<AuthState> {
 
       await TokenStorage.saveToken(token);
 
-      state = state.copyWith(isLoading: false, token: token, user: user);
+      // CLEAR OLD USER CACHE
+      ref.invalidate(myStudentsProvider);
+      ref.invalidate(allStudentsProvider);
+      ref.invalidate(incidentProvider);
+
+      state = state.copyWith(
+        isLoading: false,
+        token: token,
+        user: user,
+      );
     } catch (e) {
-      state = state.copyWith(isLoading: false, error: e.toString());
+      state = state.copyWith(
+        isLoading: false,
+        error: e.toString(),
+      );
+
       rethrow;
     }
   }
@@ -83,11 +98,20 @@ class AuthNotifier extends Notifier<AuthState> {
   // Future<void> register() async {}
 
   Future<void> logout() async {
-    if (state.token != null) {
-      await AuthService.logout(state.token!);
-    }
+    try {
+      if (state.token != null) {
+        await AuthService.logout(state.token!);
+      }
+    } catch (_) {}
 
     await TokenStorage.clearToken();
+
+    ref.read(incidentProvider.notifier).clear();
+
+    ref.invalidate(myStudentsProvider);
+    ref.invalidate(allStudentsProvider);
+    ref.invalidate(incidentProvider);
+
     state = const AuthState();
   }
 }
